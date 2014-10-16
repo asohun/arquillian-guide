@@ -1,0 +1,19 @@
+<datasources>
+	<datasource jndi-name="java:jboss/datasources/ArquillianDS"
+		pool-name="ArquillianDS">
+		<connection-url>jdbc:derby:E:\Anoop\DB\Derby\Arquillian
+		</connection-url>
+		<driver>derby</driver>
+		<transaction-isolation>TRANSACTION_READ_COMMITTED
+		</transaction-isolation>
+		<pool>
+			<min-pool-size>10</min-pool-size>
+			<max-pool-size>100</max-pool-size>
+			<prefill>true</prefill>
+		</pool>
+		<statement>
+			<prepared-statement-cache-size>32</prepared-statement-cache-size>
+			<share-prepared-statements />
+		</statement>
+	</datasource>
+</datasources>
