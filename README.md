@@ -1,4 +1,4 @@
-arquillian
+arquillian-guide
 ==========
 
 Test project based on Arquillian Guides
