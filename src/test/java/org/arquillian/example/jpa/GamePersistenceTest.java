@@ -14,11 +14,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
 
+import org.arquillian.example.util.ShrinkWrapUtility;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import org.junit.Assert;
@@ -26,20 +25,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-//TODO not working 
-
 @RunWith(Arquillian.class)
 public class GamePersistenceTest {
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return ShrinkWrap
-				.create(WebArchive.class, "test.war")
-				.addPackage(Game.class.getPackage())
-				// .addAsResource("test-persistence.xml",
-				// "META-INF/persistence.xml")
-				.addAsManifestResource("META-INF/persistence.xml",
-						"persistence.xml")
-				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+		WebArchive war = ShrinkWrapUtility.getWebArchive();
+		war.addPackage(Game.class.getPackage());
+		return war;
 	}
 
 	private static final String[] GAME_TITLES = { "Super Mario Brothers",
@@ -123,8 +115,6 @@ public class GamePersistenceTest {
 
 		Root<Game> game = criteria.from(Game.class);
 		criteria.select(game);
-		// TIP: If you don't want to use the JPA 2 Metamodel,
-		// you can change the get() method call to get("id")
 		criteria.orderBy(builder.asc(game.get(Game_.id)));
 		// No WHERE clause, which implies select all
 
