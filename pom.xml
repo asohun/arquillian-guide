@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.arquillian.example</groupId>
 	<artifactId>arquillian</artifactId>
@@ -8,13 +9,13 @@
 	<packaging>war</packaging>
 	<name>arquillian</name>
 	<properties>
+		<version.junit>4.11</version.junit>
+		<version.maven_compiler>3.2</version.maven_compiler>
+		<version.maven_surefire>2.9</version.maven_surefire>
 		<browser>phantomjs</browser>
+		<version.arquillian_persistence>1.0.0.Alpha6</version.arquillian_persistence>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.arquillian_core>1.1.2.Final</version.arquillian_core>
-		<version.maven_compiler>3.2</version.maven_compiler>
-		<version.arquillian_persistence>1.0.0.Alpha6</version.arquillian_persistence>
-		<version.maven_surefire>2.9</version.maven_surefire>
-		<version.junit>4.11</version.junit>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -22,8 +23,8 @@
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
 				<version>${version.arquillian_core}</version>
-				<scope>import</scope>
 				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.arquillian.extension</groupId>
@@ -36,6 +37,13 @@
 				<groupId>org.jboss.arquillian.selenium</groupId>
 				<artifactId>selenium-bom</artifactId>
 				<version>2.35.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>3.0.2.Final</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -70,11 +78,58 @@
 			<artifactId>arquillian-persistence-impl</artifactId>
 			<version>${version.arquillian_persistence}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.servlet</groupId>
+			<artifactId>jboss-servlet-api_3.0_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ws.rs</groupId>
+			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.transaction</groupId>
+			<artifactId>jboss-transaction-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.annotation</groupId>
+			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.faces</groupId>
+			<artifactId>jboss-jsf-api_2.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources-jbossas-remote</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.maven_compiler}</version>
 				<configuration>
@@ -120,15 +175,52 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>maven-wadl-plugin</artifactId>
+				<version>1.17</version>
+				<executions>
+					<execution>
+						<id>generate</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>${javadoc-phase}</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<wadlFile>${project.build.outputDirectory}/application.wadl
+					</wadlFile>
+					<formatWadlFile>true</formatWadlFile>
+					<baseUri>http://localhost:8080/arquillian-guide</baseUri>
+					<packagesResourceConfig>
+						<param>org.arquillian.example.rest</param>
+					</packagesResourceConfig>
+					<wadlGenerators>
+						<wadlGeneratorDescription>
+							<className>com.sun.jersey.server.wadl.generators.WadlGeneratorApplicationDoc
+							</className>
+							<properties>
+								<property>
+									<name>applicationDocsFile</name>
+									<value>${basedir}/src/main/doc/application-doc.xml</value>
+								</property>
+							</properties>
+						</wadlGeneratorDescription>
+						<wadlGeneratorDescription>
+							<className>com.sun.jersey.server.wadl.generators.WadlGeneratorGrammarsSupport
+							</className>
+							<properties>
+								<property>
+									<name>grammarsFile</name>
+									<value>${basedir}/src/main/doc/application-grammars.xml</value>
+								</property>
+							</properties>
+						</wadlGeneratorDescription>
+					</wadlGenerators>
+				</configuration>
+			</plugin>
 		</plugins>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/test/resources-jbossas-remote</directory>
-			</testResource>
-		</testResources>
 	</build>
 	<profiles>
 		<profile>
@@ -158,42 +250,6 @@
 			</dependencyManagement>
 			<dependencies>
 				<dependency>
-					<groupId>org.hibernate.javax.persistence</groupId>
-					<artifactId>hibernate-jpa-2.0-api</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.ejb</groupId>
-					<artifactId>jboss-ejb-api_3.1_spec</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.enterprise</groupId>
-					<artifactId>cdi-api</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.annotation</groupId>
-					<artifactId>jboss-annotations-api_1.1_spec</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.transaction</groupId>
-					<artifactId>jboss-transaction-api_1.1_spec</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.servlet</groupId>
-					<artifactId>jboss-servlet-api_3.0_spec</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.faces</groupId>
-					<artifactId>jboss-jsf-api_2.1_spec</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<!-- Test Dependencies -->
-				<dependency>
 					<groupId>org.jboss.as</groupId>
 					<artifactId>jboss-as-arquillian-container-remote</artifactId>
 					<version>7.1.1.Final</version>
@@ -204,6 +260,7 @@
 					<artifactId>arquillian-protocol-servlet</artifactId>
 					<scope>test</scope>
 				</dependency>
+
 			</dependencies>
 		</profile>
 		<profile>

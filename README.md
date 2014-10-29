@@ -3,7 +3,7 @@ arquillian-guide
 
 Test project based on Arquillian Guides
 
-Generating the JPA 2 Metamodel
+<h1>Generating the JPA 2 Metamodel</h1>
 
 1)  Use JDK 6
 
@@ -68,3 +68,6 @@ Generating the JPA 2 Metamodel
 <li>Enable annotation processing</li>
 <li>Apply and accept a full build</li>
 </ul>
+
+<h1>Generating WADL</h1>
+mvn compile com.sun.jersey.contribs:maven-wadl-plugin:generate
