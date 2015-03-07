@@ -1,4 +1,4 @@
-package org.arquillian.example.basic;
+package org.arquillian.example.basic.welcome;
 
 import javax.inject.Inject;
 
@@ -11,25 +11,40 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * This test can be run using the arquillian-weld-ee-embedded profile.
+ * 
+ * @author asohun
+ * @version 06.03.2015
+ */
 @RunWith(Arquillian.class)
 public class GreeterTest {
 
+	/**
+	 * @return
+	 */
 	@Deployment
 	public static JavaArchive createDeployment() {
-		JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-				.addClasses(Greeter.class, PhraseBuilder.class)
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-		System.out.println(jar.toString(true));
+		JavaArchive jar = ShrinkWrap.create(JavaArchive.class);
+		jar.addPackage(Greeter.class.getPackage());
+		jar.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 		return jar;
 	}
 
+	/**
+	 * 
+	 */
 	@Inject
-	Greeter greeter;
+	private Greeter greeter;
 
+	/**
+	 * 
+	 */
 	@Test
 	public void should_create_greeting() {
 		Assert.assertEquals("Hello, Earthling!",
 				greeter.createGreeting("Earthling"));
 		greeter.greet(System.out, "Earthling");
 	}
+
 }

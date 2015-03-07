@@ -1,4 +1,4 @@
-package org.arquillian.example.basic;
+package org.arquillian.example.basic.cart;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -13,23 +13,40 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * @author asohun
+ * @version 06.03.2015
+ */
 @RunWith(Arquillian.class)
 public class BasketTest {
+
+	/**
+	 * @return
+	 */
 	@Deployment
 	public static JavaArchive createDeployment() {
-		return ShrinkWrap
-				.create(JavaArchive.class, "test.jar")
-				.addClasses(Basket.class, OrderRepository.class,
-						SingletonOrderRepository.class)
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+		JavaArchive jar = ShrinkWrap.create(JavaArchive.class);
+		jar.addPackage(Basket.class.getPackage());
+		jar.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+		return jar;
+
 	}
 
+	/**
+	 * 
+	 */
 	@Inject
 	Basket basket;
 
+	/**
+	 * 
+	 */
 	@EJB
 	OrderRepository repo;
 
+	/**
+	 * 
+	 */
 	@Test
 	@InSequence(1)
 	public void place_order_should_add_order() {
@@ -46,9 +63,13 @@ public class BasketTest {
 		Assert.assertEquals(0, basket.getItemCount());
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	@InSequence(2)
 	public void order_should_be_persistent() {
 		Assert.assertEquals(2, repo.getOrderCount());
 	}
+
 }
