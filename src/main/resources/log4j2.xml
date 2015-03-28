@@ -2,7 +2,7 @@
 <Configuration status="WARN">
 	<Properties>
 		<Property name="filename">test.log</Property>
-		<Property name="log.directory">E:\Anoop</Property>
+		<Property name="log.directory">logs</Property>
 		<Property name="log.pattern">%d{dd/MM/yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
 		<Property name="smtp.recipient">anoop.sohun@gmail.com</Property>
 		<Property name="smtp.sender">anoop.sohun@gmail.com</Property>
