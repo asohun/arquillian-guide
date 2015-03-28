@@ -19,6 +19,8 @@ public class ShrinkWrapUtility {
 		war.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 		// war.addAsResource("META-INF/orm.xml", "META-INF/orm.xml");
 		war.addAsResource("persistence-h2.xml", "META-INF/persistence.xml");
+		war.addAsResource("log4j2.xml", "log4j2.xml");
+		war.addAsResource("log4j.xml", "log4j.xml");
 		return war;
 	}
 }

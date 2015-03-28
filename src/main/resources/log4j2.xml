@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="filename">test.log</Property>
+		<Property name="log.directory">E:\Anoop</Property>
+		<Property name="log.pattern">%d{dd/MM/yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+		<Property name="smtp.recipient">anoop.sohun@gmail.com</Property>
+		<Property name="smtp.sender">anoop.sohun@gmail.com</Property>
+		<Property name="smtp.host">bow.intnet.mu</Property>
+		<Property name="smtp.port">25</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${log.pattern}" />
+		</Console>
+		<RollingFile name="file" fileName="${log.directory}/info.log"
+			filePattern="${log.directory}/info-%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="${log.pattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+		<SMTP name="mail" subject="Error Log" to="${smtp.recipient}"
+			from="${smtp.sender}" smtpHost="${smtp.host}" smtpPort="${smtp.port}"
+			bufferSize="50">
+		</SMTP>
+	</Appenders>
+	<Loggers>
+		<Root level="trace">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
