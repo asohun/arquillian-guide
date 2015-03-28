@@ -25,8 +25,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * @author asohun
+ * @version 28/03/2015
+ */
 @RunWith(Arquillian.class)
 public class GamePersistenceTest {
+	
 	@Deployment
 	public static Archive<?> createDeployment() {
 		WebArchive war = ShrinkWrapUtility.getWebArchive();

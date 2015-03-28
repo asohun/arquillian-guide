@@ -10,7 +10,7 @@ public class ShrinkWrapUtility {
 	public static JavaArchive getJavaArchive() {
 		JavaArchive jar = ShrinkWrap.create(JavaArchive.class);
 		jar.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-		jar.addAsManifestResource("test-persistence.xml", "persistence.xml");
+		jar.addAsManifestResource("persistence-h2.xml", "persistence.xml");
 		return jar;
 	}
 
@@ -18,7 +18,7 @@ public class ShrinkWrapUtility {
 		WebArchive war = ShrinkWrap.create(WebArchive.class);
 		war.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 		// war.addAsResource("META-INF/orm.xml", "META-INF/orm.xml");
-		war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
+		war.addAsResource("persistence-h2.xml", "META-INF/persistence.xml");
 		return war;
 	}
 }

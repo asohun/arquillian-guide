@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  * @author asohun
- * @version 06.03.2015
+ * @version 06/03/2015
  */
 @Singleton
 @Startup
